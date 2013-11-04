@@ -1,32 +1,153 @@
-<project name="WebRTC Share" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="WebRTC Share" default="copy-and-refresh" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
-	<property file="gradle_${user.name}.properties" />
-	<property file="gradle.properties" />
-	<property name="gradle" value="${gradle_exec}" />
+	<!-- load properties -->
+	<property file="build_${user.name}.properties" />
+	<property file="build.properties" />
 
-	<target name="copy-jar" description="Deploy JAR to Tomcat" depends="build">
-		<copy file="build/libs/site-groups-share-${project_version}.jar" todir="${tomcat_home}/webapps/share/WEB-INF/lib" />
-	</target>
+	<!-- defaults -->
+	<property name="repo.admin.username" value="admin" />
+	<property name="repo.admin.password" value="admin" />
 
-	<target name="build" description="Build AMPs for Share and Repository">
-		<exec executable="${gradle}">
-			<arg value="clean" />
-			<arg value="jar" />
+	<property name="libs.dir" value="${appserver.dir}/webapps/${type}/WEB-INF/lib" />
+
+
+	<property name="repo.scripts.index" value="http://localhost:8080/alfresco/service/index" />
+	<property name="share.scripts.index" value="http://localhost:8080/share/page/index" />
+	
+	<property name="mvn" value="/Users/michaelboeckling/Entwicklung/Tools/maven-current/bin/mvn" />
+	
+	<target name="mvn-deploy" description="mvn-deploy">
+		<exec command="${mvn}">
+			<arg value="deploy"/>
 		</exec>
 	</target>
 
-	<target name="generate-eclipse-project" description="Build AMPs for Share and Repository">
-		<exec executable="${gradle}">
-			<arg value="eclipse" />
-		</exec>
+
+	<!-- tasks -->
+
+	<path id="classpath">
+		<fileset dir="${libs.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="build/classes" />
 	</target>
 
-	<target name="upload" description="upload">
-		<exec executable="${gradle}">
-			<arg value="clean" />
-			<arg value="jar" />
-			<arg value="uploadArchives" />
-		</exec>
+	<target name="jar" depends="clean,compile" description="jar">
+		<copy todir="build/jar">
+			<fileset dir="src/main/resources" />
+		</copy>
+
+		<copy todir="build/jar">
+			<fileset dir="build/classes" />
+		</copy>
+
+		<jar destfile="build/${name}-${version}.jar">
+			<fileset dir="build/jar" />
+		</jar>
+
+	</target>
+
+	<!-- ant-http -->
+	<target name="check-lib-http">
+		<available file="ant-lib/ml-ant-http/ml-ant-http-1.1.3.jar" property="http.present" />
+	</target>
+	<target name="get-lib-http" depends="check-lib-http" unless="http.present">
+		<mkdir dir="ant-lib" />
+		<get dest="ant-lib/ml-ant-http-1.1.3.zip" src="http://missing-link.googlecode.com/files/ml-ant-http-1.1.3.zip" />
+		<unzip dest="ant-lib/ml-ant-http" src="ant-lib/ml-ant-http-1.1.3.zip" />
+		<delete file="ant-lib/ml-ant-http-1.1.3.zip" />
+	</target>
+	<target name="setup-http" depends="get-lib-http">
+		<taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask">
+			<classpath>
+				<path>
+					<fileset dir="ant-lib/ml-ant-http/" includes="*.jar" />
+				</path>
+			</classpath>
+		</taskdef>
+	</target>
+
+
+	<!-- mvn -->
+	<target name="check-lib-maven">
+		<available file="ant-lib/maven-ant-tasks-2.1.3.jar" property="maven.present" />
+	</target>
+	<target name="get-maven-ant-tasks" depends="check-lib-maven" unless="maven.present">
+		<mkdir dir="ant-lib" />
+		<get dest="ant-lib/maven-ant-tasks-2.1.3.jar" src="http://www.eu.apache.org/dist/maven/ant-tasks/2.1.3/binaries/maven-ant-tasks-2.1.3.jar" />
+	</target>
+	<target name="setup-maven" depends="get-maven-ant-tasks">
+		<path id="maven-ant-tasks.classpath" path="ant-lib/maven-ant-tasks-2.1.3.jar" />
+		<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	</target>
+
+	<target name="settings">
+		<echo file="${user.home}/.ant/settings.xml" append="false">
+			<![CDATA[
+			<settings>
+			</settings>			
+			]]>
+		</echo>
+	</target>
+
+	<target name="deploy" description="deploy" depends="setup-maven, settings">
+		
+		<artifact:remoteRepository id="central" url="http://repo1.maven.org/maven2/" />
+		<artifact:pom id="mypom" groupId="${group}" artifactId="${name}" version="${version}">
+		</artifact:pom>
+		<artifact:install-provider artifactId="wagon-http-lightweight" version="2.5"/>
+		<artifact:deploy file="build/${name}-${version}.jar">
+			<artifact:remoteRepository url="https://artifacts.westernacher.com/inhouse-releases">
+				<authentication username="wpsadmin" password="VBs3cr3!" />
+			</artifact:remoteRepository>
+			<pom refid="mypom" />
+		</artifact:deploy>
+	</target>
+
+
+	<target name="reload-webscripts-share" depends="setup-http">
+		<http url="${share.scripts.index}" method="POST" printrequest="false" printrequestheaders="false" printresponse="false" printresponseheaders="false" expected="200" failonunexpected="true">
+			<credentials username="${repo.admin.username}" password="${repo.admin.password}" />
+			<query>
+				<parameter name="reset" value="on" />
+			</query>
+		</http>
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="build/classes" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac srcdir="src/main/java" destdir="build/classes" classpathref="classpath" source="1.6" target="1.6" debug="true" debuglevel="source,lines,vars" encoding="UTF-8">
+			<compilerarg value="-Xlint" />
+		</javac>
+	</target>
+
+	<target name="copy-jar" depends="jar" description="copy-jar">
+		<copy file="build/${name}-${version}.jar" todir="${appserver.dir}/webapps/${type}/WEB-INF/lib" />
+	</target>
+
+	<target name="copy-files" depends="compile">
+		<copy todir="${appserver.dir}/shared/classes" overwrite="true">
+			<fileset dir="src/main/resources" />
+		</copy>
+
+		<copy todir="${appserver.dir}/webapps/${type}/WEB-INF/classes" overwrite="true">
+			<fileset dir="build/classes" />
+		</copy>
+
+		<!-- special case: share-config-custom.xml -->
+		<copy todir="${appserver.dir}/shared/classes/alfresco/web-extension/" file="src/main/resources/META-INF/share-config-custom.xml" failonerror="false" overwrite="true" />
+
+		<copy todir="${appserver.dir}/webapps/${type}" overwrite="true" failonerror="false">
+			<fileset dir="src/main/webapp" />
+		</copy>
+
+	</target>
+
+	<target name="copy-and-refresh" depends="copy-files, reload-webscripts-share" description="copy-and-refresh">
 	</target>
 
 </project>
