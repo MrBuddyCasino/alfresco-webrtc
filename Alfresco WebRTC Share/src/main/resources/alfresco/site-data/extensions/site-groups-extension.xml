@@ -2,14 +2,16 @@
 	<modules>
 
 		<module>
-			<id>Site Groups (site-scoped groups) </id>
+			<id>WebRTC Chat</id>
 			<auto-deploy>true</auto-deploy>
+			<!-- 
 			<customizations>
 				<customization>
 					<targetPackageRoot>org.alfresco.modules.documentlibrary</targetPackageRoot>
 					<sourcePackageRoot>com.westernacher.modules.documentlibrary</sourcePackageRoot>
 				</customization>
 			</customizations>
+			 -->
 		</module>
 
 	</modules>

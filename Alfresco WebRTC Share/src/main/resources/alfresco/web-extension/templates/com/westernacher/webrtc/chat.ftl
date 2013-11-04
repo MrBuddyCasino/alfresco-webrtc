@@ -8,7 +8,7 @@
       <@region id="navigation" scope="template" />
    </div>
    <div id="bd">
-      <@region id="site-groups-manager" scope="template" />
+      <@region id="webrtc" scope="template" />
    </div>
 </@>
 
