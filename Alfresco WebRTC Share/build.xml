@@ -99,7 +99,7 @@
 		<artifact:install-provider artifactId="wagon-http-lightweight" version="2.5"/>
 		<artifact:deploy file="build/${name}-${version}.jar">
 			<artifact:remoteRepository url="https://artifacts.westernacher.com/inhouse-releases">
-				<authentication username="wpsadmin" password="VBs3cr3!" />
+				
 			</artifact:remoteRepository>
 			<pom refid="mypom" />
 		</artifact:deploy>
