@@ -9,6 +9,8 @@
         <script src="/share/components/webrtc-chat/simplewebrtc.bundle.js"></script>
         
    <style type="text/css" media="screen">
+   
+      @import url("/share/res/components/webrtc-chat/chat.css");
       @import url("/share/res/css/yui-fonts-grids.css");
       @import url("/share/res/yui/columnbrowser/assets/columnbrowser.css");
       @import url("/share/res/yui/columnbrowser/assets/skins/default/columnbrowser-skin.css");
@@ -59,11 +61,10 @@
 				 </div>
 				</div>
 				
-				<div class="yui-gd">
-				   <div class="yui-u"><input id="chatinput" type="text" name="title" tabindex="0" maxlength="255" placeholder="Message:" /></div>
-				   <div class="yui-button"><button id="email">${msg("label.post")}</button></div>
-				 </div>
-				 
+				<div class="yui-u first" style="padding-top: 10px;">
+				   <input id="message" type="text" name="title" tabindex="0" maxlength="255" />
+				   <div class="yui-button"><button id="email">Post</button></div>
+				   </div>
 				 </div>
            </div>
          <div class="yui-u">		 

@@ -1,12 +1,12 @@
 <alfresco-config>
 
-	<!-- Global config section
+	<!-- Global config section -->
 	<config replace="true">
 		<flags>
 			<client-debug>true</client-debug>
 			<client-debug-autologging>false</client-debug-autologging>
 		</flags>
-	</config> -->
+	</config>
 
 	<!-- auto-deploy -->
 	<config evaluator="string-compare" condition="WebFramework">
