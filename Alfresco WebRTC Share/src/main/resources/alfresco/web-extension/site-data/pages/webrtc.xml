@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <id>webrtc</id>
+   <page-type>webrtc</page-type>
+   <title-id>page.webrtc.title</title-id>
+   <description-id>page.webrtc.description</description-id>
+   <template-instance>webrtc</template-instance>
+   <authentication>user</authentication>
+</page>

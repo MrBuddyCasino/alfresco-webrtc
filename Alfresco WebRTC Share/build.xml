@@ -1,0 +1,32 @@
+<project name="WebRTC Share" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<property file="gradle_${user.name}.properties" />
+	<property file="gradle.properties" />
+	<property name="gradle" value="${gradle_exec}" />
+
+	<target name="copy-jar" description="Deploy JAR to Tomcat" depends="build">
+		<copy file="build/libs/site-groups-share-${project_version}.jar" todir="${tomcat_home}/webapps/share/WEB-INF/lib" />
+	</target>
+
+	<target name="build" description="Build AMPs for Share and Repository">
+		<exec executable="${gradle}">
+			<arg value="clean" />
+			<arg value="jar" />
+		</exec>
+	</target>
+
+	<target name="generate-eclipse-project" description="Build AMPs for Share and Repository">
+		<exec executable="${gradle}">
+			<arg value="eclipse" />
+		</exec>
+	</target>
+
+	<target name="upload" description="upload">
+		<exec executable="${gradle}">
+			<arg value="clean" />
+			<arg value="jar" />
+			<arg value="uploadArchives" />
+		</exec>
+	</target>
+
+</project>

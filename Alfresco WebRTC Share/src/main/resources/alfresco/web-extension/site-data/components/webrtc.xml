@@ -1,0 +1,6 @@
+<component>
+   <region-id>webrtc</region-id>
+   <source-id>global</source-id>
+   <scope>page</scope>
+   <uri>/westernacher/webrtc/chat</uri>
+</component>
