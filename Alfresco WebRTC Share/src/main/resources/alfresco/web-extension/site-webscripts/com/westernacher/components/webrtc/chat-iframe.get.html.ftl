@@ -25,13 +25,17 @@
                 height: 150px;
             }
             
-            .remoteVideos video {
+            #remoteVideos video {
                 height: 150px;
+            }
+            
+            video {
+            	padding-top: 10px;
             }
         </style>
 
 
-<div class="alfresco-share">
+<div class="sticky-wrapper">
 	<div class="yui-g">
          <div class="yui-u first">
               <div id="body" class="chat">
@@ -56,7 +60,6 @@
 				</div>
 				
 				<div class="yui-gd">
-				   <div class="yui-u first"><label for="message"	>${msg("label.message")}:</label></div>
 				   <div class="yui-u"><input id="chatinput" type="text" name="title" tabindex="0" maxlength="255" placeholder="Message:" /></div>
 				   <div class="yui-button"><button id="email">${msg("label.post")}</button></div>
 				 </div>

@@ -10,4 +10,4 @@ var iframeUrl = Alfresco.constants.URL_CONTEXT + "service/westernacher/webrtc/ch
 <iframe id="webrtc-chat" onload="autoResize('webrtc-chat');"
  src="/share/service/westernacher/webrtc/chat-iframe?swsdp" 
 seamless="true" 
-style="width: 100%; height: 800px; overflow: hidden;" />
+style="width: 100%; height: 1200px; overflow: hidden;" />
