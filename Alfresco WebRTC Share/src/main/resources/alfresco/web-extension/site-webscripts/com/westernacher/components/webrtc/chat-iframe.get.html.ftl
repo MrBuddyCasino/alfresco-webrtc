@@ -21,7 +21,11 @@
     </head>
     <body>
         <style>
-            #remotes video {
+        	#localVideo {
+                height: 150px;
+            }
+            
+            .remoteVideos video {
                 height: 150px;
             }
         </style>
@@ -52,7 +56,7 @@
 				</div>
 				
 				<div class="yui-gd">
-				   <div class="yui-u first"><label for="message">${msg("label.message")}:</label></div>
+				   <div class="yui-u first"><label for="message"	>${msg("label.message")}:</label></div>
 				   <div class="yui-u"><input id="chatinput" type="text" name="title" tabindex="0" maxlength="255" placeholder="Message:" /></div>
 				   <div class="yui-button"><button id="email">${msg("label.post")}</button></div>
 				 </div>
@@ -60,9 +64,9 @@
 				 </div>
            </div>
          <div class="yui-u">		 
-				 <div id="body" class="video">
-        		<video height="300" id="localVideo"></video>
-        		<div id="remotesVideos"></div>
+				<div id="body" class="video">
+        		<video id="localVideo"></video>
+        		<div id="remoteVideos"></div>
               </div>
  		</div>
  		<button id="screenShareButton" style="display:none;"></button>
@@ -77,7 +81,7 @@
                 // the id/element dom element that will hold "our" video
                 localVideoEl: 'localVideo',
                 // the id/element dom element that will hold remote videos
-                remoteVideosEl: 'remotes',
+                remoteVideosEl: 'remoteVideos',
                 // immediately ask for camera access
                 autoRequestMedia: true,
                 debug: true,
