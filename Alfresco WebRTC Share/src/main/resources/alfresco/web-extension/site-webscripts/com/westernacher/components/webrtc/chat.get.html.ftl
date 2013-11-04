@@ -1,33 +1,13 @@
 
-<!--[if IE]>
-<iframe id="yui-history-iframe" src="${url.context}/res/yui/history/assets/blank.html"></iframe>
-<![endif]-->
-<input id="yui-history-field" type="hidden" />
-
 <#assign el=args.htmlid?html>
 
+<script language="JavaScript">
+<!--
+var iframeUrl = Alfresco.constants.URL_CONTEXT + "service/westernacher/webrtc/chat-iframe?" + Alfresco.constants.SITE;
+//-->
+</script>
 
-<div id="${el}-body" class="groups">
-        <video height="300" id="localVideo"></video>
-        <div id="remotesVideos"></div>
-
-</div>
-
-<script type="text/javascript">//<![CDATA[
-
-var webrtc = new SimpleWebRTC({
-    // the id/element dom element that will hold "our" video
-    localVideoEl: 'localVideo',
-    // the id/element dom element that will hold remote videos
-    remoteVideosEl: 'remotesVideos',
-    // immediately ask for camera access
-    autoRequestMedia: true
-});
-
-// we have to wait until it's ready
-webrtc.on('readyToCall', function () {
-    // you can name it anything
-    webrtc.joinRoom('your awesome room name');
-});
-
-//]]></script>
+<iframe id="webrtc-chat" onload="autoResize('webrtc-chat');"
+ src="/share/service/westernacher/webrtc/chat-iframe?swsdp" 
+seamless="true" 
+style="width: 100%; height: 800px; overflow: hidden;" />

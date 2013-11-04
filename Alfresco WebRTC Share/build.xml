@@ -147,6 +147,9 @@
 
 	</target>
 
+	<target name="copy" depends="copy-files" description="copy-and-refresh">
+	</target>
+	
 	<target name="copy-and-refresh" depends="copy-files, reload-webscripts-share" description="copy-and-refresh">
 	</target>
 
